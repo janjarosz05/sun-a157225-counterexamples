@@ -1,0 +1,6 @@
+.lake/
+*.aux
+*.log
+*.out
+cert.json
+sieve2k

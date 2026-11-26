@@ -1,0 +1,162 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[T1]{fontenc}\usepackage[utf8]{inputenc}\usepackage{lmodern}
+\usepackage[margin=2.4cm]{geometry}
+\usepackage{xcolor}\usepackage{amsmath,amssymb,amsthm,booktabs,longtable,hyperref,enumitem}
+\hypersetup{colorlinks=true,linkcolor=blue!50!black,urlcolor=blue!50!black,citecolor=blue!50!black}
+\newtheorem{theorem}{Theorem}\newtheorem{lemma}[theorem]{Lemma}\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}\newtheorem{definition}[theorem]{Definition}
+\newtheorem{observation}[theorem]{Computational observation}\newtheorem{question}[theorem]{Open question}
+\theoremstyle{remark}\newtheorem{remark}[theorem]{Remark}
+\newcommand{\Rep}{\mathrm{Rep}}
+\title{Two new counterexamples to a conjecture of Zhi-Wei Sun\\ on $p+2^x+7\cdot 2^y$ (OEIS A157225)}
+\author{Jan Jarosz}
+\date{26 November 2026}
+\begin{document}\maketitle
+\begin{abstract}
+Sun conjectured in 2009 that every odd integer $m>20$ other than $25$, $31$ and $1983$ can be written as
+$m=p+2^x+7\cdot 2^y$ with $p$ a prime congruent to $5$ modulo $6$ and $x,y\ge 1$. The conjecture was disproved in
+August 2026 by a single counterexample, $m=1\,433\,987\,797$. We give two more:
+\[ m=45\,483\,661\,477\qquad\text{and}\qquad m=85\,305\,551\,767 . \]
+Both are proved in Lean~4 with Mathlib, by a certificate that the kernel checks in a few seconds. An exhaustive
+sieve finds no other counterexample below $10^{11}$; this last statement is a computation, not a formal proof,
+and is labelled as such throughout.
+\end{abstract}
+
+\section{Statement}
+\begin{definition}
+For a positive integer $m$ write $\Rep(m)$ if there are a prime $p\equiv 5\pmod 6$ and integers $x,y\ge 1$ with
+$m=p+2^x+7\cdot 2^y$. OEIS A157225 is the sequence $a(n)=\#\{(p,x,y)\}$ for $m=2n-1$, so $a(n)=0$ exactly when
+$\Rep(2n-1)$ fails.
+\end{definition}
+
+\noindent\textbf{Conjecture (Z.-W. Sun, 24 February 2009 \cite{oeis,sun}).} $a(n)=0$ if and only if $n<11$ or
+$n\in\{13,16,992\}$. Equivalently, $\Rep(m)$ holds for every odd $m>20$ except $m=25,31,1983$.
+Sun verified this for odd $m<5\cdot 10^{7}$ and Q.-H. Hou for $m<1.5\cdot 10^{8}$ \cite{oeis}.
+
+\medskip\noindent\textbf{Known disproof.} T.~Adamczewski \cite{epoch} reported $a(716\,993\,899)=0$, that is,
+$\Rep(1\,433\,987\,797)$ fails. As of 26 November 2026 this is the only counterexample listed on the OEIS page
+\cite{oeis}.
+
+\section{Results}
+\begin{theorem}[proved; Lean kernel]\label{thm:main}
+$\Rep(m)$ fails for
+\begin{center}\begin{tabular}{rrl}\toprule
+$m$ & $n=(m+1)/2$ & status\\\midrule
+$1\,433\,987\,797$ & $716\,993\,899$ & known \cite{epoch}, re-proved here\\
+$45\,483\,661\,477$ & $22\,741\,830\,739$ & new\\
+$85\,305\,551\,767$ & $42\,652\,775\,884$ & new\\\bottomrule\end{tabular}\end{center}
+Hence $a(22\,741\,830\,739)=a(42\,652\,775\,884)=0$.
+\end{theorem}
+\begin{corollary}[proved]\label{cor}Sun's conjecture for A157225 is false. (This was already known from \cite{epoch}; each of the
+three numbers gives an independent proof.)\end{corollary}
+
+\begin{observation}[sieve; not formally verified]\label{obs}
+Among odd $m$ with $1983<m<10^{11}$, the three numbers of Theorem~\ref{thm:main} are the only ones for which
+$\Rep(m)$ fails. In particular $1\,433\,987\,797$ is the least counterexample and the two new numbers are the
+second and the third.
+\end{observation}
+
+\noindent\textbf{What is and is not claimed.}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+\item \emph{Counterexamples (theorems):} the three numbers in Theorem~\ref{thm:main}. Nothing here is a mere candidate.
+\item \emph{Computed, not proved:} completeness below $10^{11}$ (Observation~\ref{obs}). It rests on our sieve
+program and on the hardware. It was run twice with identical output and it reproduces Sun's list of small
+exceptions and Adamczewski's number.
+\item \emph{Novelty:} ``new'' means not on the OEIS page \cite{oeis} on 26 November 2026 and unknown to us from
+any other source. We have not made an exhaustive literature search.
+\item \emph{Not claimed:} that there are infinitely many counterexamples (Question~\ref{q}), or anything about the
+sister conjectures A157237 and A157218, which we checked up to $10^{11}$ without finding a counterexample.
+\end{itemize}
+
+\section{Proof of Theorem~\ref{thm:main}}
+Fix $m$. Call a pair $(x,y)$ with $x,y\ge1$ and $2^x+7\cdot2^y<m$ a \emph{cell}, and put $r=m-2^x-7\cdot 2^y$.
+$\Rep(m)$ holds iff for some cell $r$ is a prime $\equiv5\pmod 6$. There are finitely many cells
+($x,y<\log_2 m$), so it suffices to exhibit for each cell either $r\not\equiv 5\pmod 6$ or a divisor $d$ with $1<d<r$,
+$d\mid r$.
+
+\begin{lemma}[parity filter]\label{lem}
+Let $m\equiv 1\pmod 6$. If $r\equiv 5\pmod 6$ then $x$ and $y$ are both even.
+\end{lemma}
+\begin{proof}
+$2^x\equiv 2$ or $4\pmod 6$ according as $x$ is odd or even, and $7\cdot2^y\equiv 2^y$. We need
+$2^x+7\cdot 2^y\equiv m-5\equiv 2\pmod 6$, and among $2+2$, $2+4$, $4+4$ only $4+4\equiv 2$.
+\end{proof}
+All three numbers are $\equiv1\pmod 6$, so about three quarters of the cells die at once. The remaining cells
+are killed by explicit divisors:
+\begin{center}\begin{tabular}{rrrrrr}\toprule
+$m$ & cells & $r\not\equiv5\ (6)$ & composite $r$ & distinct divisors used & largest\\\midrule
+$1\,433\,987\,797$ & 807 & 613 & 194 & 40 & 13\,313\\
+$45\,483\,661\,477$ & 1117 & 846 & 271 & 60 & 163\,883\\
+$85\,305\,551\,767$ & 1185 & 898 & 287 & 66 & 292\,057\\\bottomrule\end{tabular}\end{center}
+The divisor of every surviving cell is listed in the Appendix, so the theorem can be checked by
+$271+287$ divisions (plus $194$ for the known number). \qed
+
+\paragraph{Formal proof.} The file \texttt{SunA157225.lean} (Lean 4.35.0, Mathlib) defines
+$\Rep$ with Mathlib's \texttt{Nat.Prime}, a Boolean function \texttt{check m N L} that tests all cells with $x,y<N$
+against a divisor list $L$, and proves the soundness lemma
+\[\texttt{not\_rep\_of\_check}:\quad m<2^N\ \wedge\ \texttt{check m N L}=\texttt{true}\ \Longrightarrow\ \neg\,\Rep(m).\]
+The three theorems \texttt{not\_rep\_1433987797}, \texttt{not\_rep\_45483661477}, \texttt{not\_rep\_85305551767}
+apply it with $N=31,36,37$; the evaluation of \texttt{check} is done by the Lean kernel (\texttt{decide +kernel}).
+There is no \texttt{sorry} and no \texttt{native\_decide}; the axioms used are only \texttt{propext} and
+\texttt{Quot.sound}. Corollary~\ref{cor} is \texttt{sunConjecture\_false}. The whole file compiles in about 5 seconds.
+
+Observation~\ref{obs} appears in the file only as a named hypothesis \texttt{SieveComplete : Prop}. Two
+conditional theorems use it as an explicit assumption: \texttt{least\_of\_sieve} (then $1\,433\,987\,797$ is the least
+counterexample) and \texttt{counter\_below\_of\_sieve} (then the set of counterexamples below $10^{11}$ is exactly
+our three numbers).
+
+\section{Method}
+\paragraph{Search.} A bit-sieve. For each residue $R\in\{1,5\}$ a bitmap stores which $6k+R<B$ are prime.
+For a fixed class $m\equiv c\pmod 6$, each term $t=2^x+7\cdot 2^y$ with $t\equiv c-5 \pmod 6$ turns the question
+``is $m-t$ prime?'' into a shift of the bitmap by $(t-c+5)/6$ positions. OR-ing the shifted bitmaps over all $t$
+gives, 64 values of $m$ per machine word, the set of representable $m$; zero bits are the exceptions. With
+$B=10^{11}$ this takes about 75 seconds on 4 cores and 2\,GB of memory (\texttt{sieve2k.c}). The complete output
+for odd $m<10^{11}$ is
+\[1,3,5,\dots,19,\ 25,\ 31,\ 1983,\ 1\,433\,987\,797,\ 45\,483\,661\,477,\ 85\,305\,551\,767 .\]
+\paragraph{Independent check.} Each of the three numbers was re-examined by a separate Python script (SymPy
+primality and factoring, no shared code with the sieve): every cell was enumerated and its $r$ shown to be
+$\not\equiv 5\pmod 6$ or composite. The same script recovers exactly Sun's exceptions for $m<2\cdot10^{5}$.
+\paragraph{How the candidates were ranked.} The search was guided by a ``clock'' picture: a small prime $q$ with
+small multiplicative order of $2$ kills a fixed periodic pattern of cells once $m \bmod q$ is fixed. The clock $3$
+gives Lemma~\ref{lem}; for our numbers the next clocks $5$ and $7$ kill $72$ and about $71$ of the roughly $280$
+surviving cells each, and $13$ and $17$ another $15$ to $26$. This explains why the counterexamples exist but it is
+a heuristic: we found no full covering system, so it proves nothing about
+further counterexamples.
+
+\begin{question}\label{q}
+Are there infinitely many odd $m$ for which $\Rep(m)$ fails? The number of cells surviving the parity filter grows
+like $(\log_2 m)^2/4$ while the chance that a given $r$ is prime decays only like $1/\log m$, so
+counterexamples should become rarer; without a covering congruence argument (as in Crocker \cite{crocker} for
+$p+2^x+2^y$) we see no way to decide this. The next counterexample, if any, exceeds $10^{11}$.
+\end{question}
+
+\section{Files}
+\begin{itemize}[leftmargin=1.4em,itemsep=1pt]
+\item \texttt{SunA157225.lean}: definitions, checker, the three theorems, hypotheses and conditional theorems.
+\item \texttt{certificate\_}$m$\texttt{.csv} for the three $m$: one line $(x,y,r,d)$ per surviving cell, $d$ the least prime factor of $r$.
+\item \texttt{verify.py}: the independent check. \texttt{sieve2k.c}: the sieve
+(\texttt{./sieve2k 5 100000000000 7}).
+\end{itemize}
+
+\begin{thebibliography}{9}
+\bibitem{oeis} OEIS Foundation, sequence A157225, \url{https://oeis.org/A157225} (consulted 26 November 2026).
+\bibitem{sun} Z.-W. Sun, \emph{Mixed sums of primes and other terms}, arXiv:0901.3075 (2009).
+\bibitem{epoch} T. Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941 (2026).
+\bibitem{crocker} R. Crocker, \emph{On a sum of a prime and two powers of two}, Pacific J. Math. 36 (1971), 103--107.
+\end{thebibliography}
+
+\appendix
+\section{Certificates}
+Each entry is $(x,y)\ d$: for the cell $(x,y)$ with $x,y$ both even, $d$ is the least prime factor of
+$r=m-2^x-7\cdot2^y$ (and $d<r$). Cells not listed have an odd $x$ or $y$ and are excluded by Lemma~\ref{lem}.
+\small
+\subsection*{$m=45\,483\,661\,477$ \quad (271 cells; $x\le 34$, $y\le 32$)}
+Divisors used: \input{divs_45483661477.tex}.
+\begin{longtable}{@{}llllll@{}}\input{tab_45483661477.tex}\end{longtable}
+\subsection*{$m=85\,305\,551\,767$ \quad (287 cells; $x\le 36$, $y\le 32$)}
+Divisors used: \input{divs_85305551767.tex}.
+\begin{longtable}{@{}llllll@{}}\input{tab_85305551767.tex}\end{longtable}
+\subsection*{$m=1\,433\,987\,797$ \quad (194 cells; known counterexample)}
+Divisors used: \input{divs_1433987797.tex}.
+\begin{longtable}{@{}llllll@{}}\input{tab_1433987797.tex}\end{longtable}
+\end{document}
