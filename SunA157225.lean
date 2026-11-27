@@ -17,12 +17,12 @@
   The first two were found independently by us a few hours later the same day (sieve up to 10^11);
   priority for all four is Moshe's.  This file contributes formal proofs of all five.
 
-  On 27 Nov 2026 our segmented sieve (`search/seg2k.c`), run on 10^13 <= m < 2.7*10^13, found two
-  more, beyond Moshe's stated search bound of 10^13:
+  On 27 Nov 2026 our segmented sieve (`search/seg2k.c`), run on all of 10^13 <= m < 10^14, found
+  exactly four more, beyond Moshe's stated search bound of 10^13:
       m = 15429013109983  (n = 7714506554992),
-      m = 16170736674691  (n = 8085368337346).
+      m = 16170736674691  (n = 8085368337346),
       m = 35009488862317  (n = 17504744431159),
-      m = 96561420011947  (n = 48280710005974)   [search of 10^13 .. 10^14 still in progress].
+      m = 96561420011947  (n = 48280710005974).
   They are proved below as well.  We do not know of an earlier source for these.
 
   What is PROVED here (Lean kernel, `decide +kernel`; no `sorry`, no `native_decide`,
@@ -34,7 +34,8 @@
 
   What is NOT proved here and is stated only as a named hypothesis (`Prop`):
   `SieveComplete` (our bit-sieve found no other odd m < 10^11 without a representation),
-  `SearchComplete13` (Moshe's reported search: no others below 10^13; not re-run by us) and
+  `SearchComplete13` (Moshe's reported search: no others below 10^13; not re-run by us),
+  `SearchWindow14` (our segmented sieve: exactly these four in 10^13 <= m < 10^14) and
   `InfinitelyMany` (open question).  Theorems that use them take them as explicit arguments.
 
   Lean 4 (v4.35.0) + Mathlib (v4.35.0).
@@ -240,10 +241,15 @@ theorem rep_35 : Rep 35 := ⟨17, 2, 1, by norm_num, by norm_num, by norm_num, b
 
 end SunA157225
 
+#print axioms SunA157225.not_rep_1433987797
 #print axioms SunA157225.not_rep_45483661477
 #print axioms SunA157225.not_rep_85305551767
+#print axioms SunA157225.not_rep_367084269651
 #print axioms SunA157225.not_rep_1572650032347
 #print axioms SunA157225.not_rep_15429013109983
 #print axioms SunA157225.not_rep_16170736674691
+#print axioms SunA157225.not_rep_35009488862317
+#print axioms SunA157225.not_rep_96561420011947
 #print axioms SunA157225.sunConjecture_false
 #print axioms SunA157225.least_of_sieve
+#print axioms SunA157225.counter_below_14_of_searches

@@ -47,9 +47,11 @@ Priority for all four belongs to Moshe. What this repository adds is the formal 
   is false. No `sorry`, no `native_decide`; axioms used: `propext`, `Quot.sound`.
 - **Computed, not proved:** my exhaustive bit-sieve finds no other counterexample below 10^11
   (hypothesis `SieveComplete` in the Lean file). Moshe reports none other below 10^13
-  (hypothesis `SearchComplete13`; I have not re-run that search). Theorems such as
-  "1433987797 is the least counterexample" are conditional on these hypotheses.
-- **Open:** whether there are infinitely many counterexamples.
+  (hypothesis `SearchComplete13`; I have not re-run that search). My segmented sieve finds exactly
+  the last four in 10^13 ≤ m < 10^14 (hypothesis `SearchWindow14`). Theorems such as
+  "1433987797 is the least counterexample" or "there are exactly nine below 10^14" are
+  conditional on these hypotheses.
+- **Open:** whether there are infinitely many counterexamples (hypothesis `InfinitelyMany`, not claimed).
 
 ## Files
 
@@ -85,7 +87,7 @@ Expected sieve output: the small exceptions 1, 3, ..., 19, 25, 31, 1983 and the 
 
 ## Why the proofs are short
 
-The first three numbers are ≡ 1 (mod 6); then `r ≡ 5 (mod 6)` forces `x` and `y` to be both even.
-The last two are ≡ 3 (mod 6), which forces both to be odd. Either way three quarters of the cells
-disappear. Each remaining `r` (between 194 and 380 of them per number) has a prime factor below
-1.2 million, listed in the certificates.
+Seven of the nine numbers are ≡ 1 (mod 6); then `r ≡ 5 (mod 6)` forces `x` and `y` to be both even.
+The other two (367084269651 and 1572650032347) are ≡ 3 (mod 6), which forces both to be odd.
+Either way three quarters of the cells disappear. Each remaining `r` (between 194 and 482 of them
+per number) has a prime factor below 7.7 million, listed in the certificates.
