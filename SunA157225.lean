@@ -1,6 +1,6 @@
 /-
-  Two new counterexamples to Zhi-Wei Sun's conjecture in OEIS A157225
-  Jan Jarosz (Prime LMM project, series OB1), 26 November 2026.
+  Kernel-checked counterexamples to Zhi-Wei Sun's conjecture in OEIS A157225
+  Jan Jarosz (Prime LMM project, series OB1), 26 November 2026; revised 27 November 2026.
 
   A157225: a(n) = number of ways to write the n-th positive odd integer 2n-1 as
       p + 2^x + 7 * 2^y,   p prime, p ≡ 5 (mod 6),   x, y ≥ 1.
@@ -8,17 +8,23 @@
   equivalently every odd m > 20 other than 25, 31, 1983 has such a representation.
 
   Status. The conjecture was disproved in August 2026 (T. Adamczewski, arXiv:2608.11941)
-  by m = 1433987797 (n = 716993899).  This file re-proves that counterexample and proves
-  two further ones, which are not on the OEIS page as of 26 Nov 2026:
-      m = 45483661477  (n = 22741830739),
-      m = 85305551767  (n = 42652775884).
+  by m = 1433987797 (n = 716993899).  On 26 Nov 2026 Yotam Moshe proposed on the OEIS page four
+  further counterexamples, from a search of all odd m < 10^13:
+      m = 45483661477    (n = 22741830739),
+      m = 85305551767    (n = 42652775884),
+      m = 367084269651   (n = 183542134826),
+      m = 1572650032347  (n = 786325016174).
+  The first two were found independently by us a few hours later the same day (sieve up to 10^11);
+  priority for all four is Moshe's.  This file contributes formal proofs of all five.
 
   What is PROVED here (Lean kernel, `decide +kernel`; no `sorry`, no `native_decide`,
   no extra axioms):  `not_rep_1433987797`, `not_rep_45483661477`, `not_rep_85305551767`,
-  `sunConjecture_false`, and the small facts in the last section.
+  `not_rep_367084269651`, `not_rep_1572650032347`, `sunConjecture_false`, and the small facts
+  in the last section.
 
   What is NOT proved here and is stated only as a named hypothesis (`Prop`):
-  `SieveComplete` (our bit-sieve found no other odd m < 10^11 without a representation) and
+  `SieveComplete` (our bit-sieve found no other odd m < 10^11 without a representation),
+  `SearchComplete13` (Moshe's reported search: no others below 10^13; not re-run by us) and
   `InfinitelyMany` (open question).  Theorems that use them take them as explicit arguments.
 
   Lean 4 (v4.35.0) + Mathlib (v4.35.0).
@@ -81,24 +87,34 @@ theorem not_rep_of_check (m N : ℕ) (L : List ℕ) (hm : m < 2 ^ N)
     obtain ⟨⟨h1, h2⟩, h3⟩ := hd
     rcases (Nat.dvd_prime hp).mp (Nat.dvd_of_mod_eq_zero h3) with h | h <;> omega
 
-/-! ### The three counterexamples (kernel-checked) -/
+/-! ### The five counterexamples (kernel-checked) -/
 
 /-- Adamczewski's counterexample (Aug 2026), n = 716993899: 807 cells, 40 divisors. -/
 theorem not_rep_1433987797 : ¬ Rep 1433987797 :=
   not_rep_of_check 1433987797 31 [5, 7, 11, 13, 17, 19, 23, 31, 37, 41, 43, 47, 53, 59, 79, 83, 89, 103, 109, 113, 157, 163, 239, 281, 359, 367, 373, 439, 479, 499, 631, 659, 877, 1753, 2543, 2617, 3167, 4219, 10159, 13313]
     (by decide +kernel) (by decide +kernel)
 
-/-- NEW, n = 22741830739: 1117 cells, 60 divisors. -/
+/-- n = 22741830739 (Moshe; independently OB1): 1117 cells, 60 divisors. -/
 theorem not_rep_45483661477 : ¬ Rep 45483661477 :=
   not_rep_of_check 45483661477 36 [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 47, 53, 61, 67, 79, 83, 89, 97, 101, 107, 113, 131, 139, 163, 173, 179, 223, 227, 239, 241, 269, 277, 281, 313, 461, 479, 509, 563, 1163, 1249, 1433, 1447, 1733, 1747, 2113, 2389, 4159, 5653, 6619, 13163, 20897, 29131, 33563, 45869, 51229, 58997, 81181, 81517, 82571, 163883]
     (by decide +kernel) (by decide +kernel)
 
-/-- NEW, n = 42652775884: 1185 cells, 66 divisors. -/
+/-- n = 42652775884 (Moshe; independently OB1): 1185 cells, 66 divisors. -/
 theorem not_rep_85305551767 : ¬ Rep 85305551767 :=
   not_rep_of_check 85305551767 37 [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 67, 79, 83, 89, 101, 103, 107, 109, 127, 131, 151, 157, 173, 179, 181, 211, 229, 241, 271, 277, 467, 757, 797, 821, 1867, 2011, 2351, 2797, 3533, 3593, 4229, 4483, 4673, 4931, 5261, 5849, 7901, 8167, 8839, 9437, 11251, 13229, 14753, 20483, 21961, 35053, 68059, 85469, 151531, 163433, 231131, 292057]
     (by decide +kernel) (by decide +kernel)
 
-/-- Sun's conjecture for A157225 is false (each of the three numbers refutes it). -/
+/-- n = 183542134826 (Moshe 2026): 1327 cells, 73 divisors. -/
+theorem not_rep_367084269651 : ¬ Rep 367084269651 :=
+  not_rep_of_check 367084269651 39 [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 67, 71, 73, 79, 83, 89, 101, 103, 107, 127, 137, 139, 149, 157, 167, 179, 199, 223, 241, 283, 311, 331, 353, 367, 373, 383, 389, 401, 431, 523, 601, 673, 1303, 1367, 1433, 1531, 3767, 3989, 5821, 6991, 7691, 8101, 19333, 26431, 35507, 42683, 60077, 64901, 66533, 72823, 78643, 78721, 117577, 136343, 189983, 200591, 219809, 407437]
+    (by decide +kernel) (by decide +kernel)
+
+/-- n = 786325016174 (Moshe 2026): 1478 cells, 83 divisors. -/
+theorem not_rep_1572650032347 : ¬ Rep 1572650032347 :=
+  not_rep_of_check 1572650032347 41 [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 53, 59, 67, 71, 73, 79, 83, 89, 97, 103, 109, 113, 131, 139, 157, 163, 167, 173, 179, 191, 193, 197, 233, 239, 257, 331, 337, 347, 509, 877, 1009, 1049, 1051, 1087, 1109, 1231, 1327, 1439, 1481, 1721, 2389, 3623, 3709, 3767, 5531, 6317, 6491, 6637, 6983, 7907, 11981, 17299, 38557, 95063, 109937, 144439, 181061, 188933, 197539, 231317, 244553, 263521, 427997, 495713, 513673, 556811, 559259, 762659, 969457, 1159993, 1173917]
+    (by decide +kernel) (by decide +kernel)
+
+/-- Sun's conjecture for A157225 is false (each of the five numbers refutes it). -/
 theorem sunConjecture_false : ¬ SunConjecture := fun h =>
   not_rep_45483661477 (h 45483661477 (by norm_num) (by norm_num) (by norm_num) (by norm_num) (by norm_num))
 
@@ -108,13 +124,21 @@ def Counter : Set ℕ := {m | m % 2 = 1 ∧ 1983 < m ∧ ¬ Rep m}
 theorem mem_counter_1433987797 : 1433987797 ∈ Counter := ⟨by norm_num, by norm_num, not_rep_1433987797⟩
 theorem mem_counter_45483661477 : 45483661477 ∈ Counter := ⟨by norm_num, by norm_num, not_rep_45483661477⟩
 theorem mem_counter_85305551767 : 85305551767 ∈ Counter := ⟨by norm_num, by norm_num, not_rep_85305551767⟩
+theorem mem_counter_367084269651 : 367084269651 ∈ Counter := ⟨by norm_num, by norm_num, not_rep_367084269651⟩
+theorem mem_counter_1572650032347 : 1572650032347 ∈ Counter := ⟨by norm_num, by norm_num, not_rep_1572650032347⟩
 
 /-! ### Hypotheses (computed or open; NOT proved in Lean) -/
 
 /-- COMPUTATIONAL CLAIM (bit-sieve `sieve2k.c`, run twice, not kernel-checked): below 10^11
-the only odd m > 1983 without a representation are the three numbers above. -/
+the only odd m > 1983 without a representation are the first three numbers above. -/
 def SieveComplete : Prop :=
   ∀ m ∈ Counter, m < 10 ^ 11 → m = 1433987797 ∨ m = 45483661477 ∨ m = 85305551767
+
+/-- REPORTED CLAIM (Y. Moshe, OEIS A157225 draft, 26 Nov 2026; not re-run by us, not
+kernel-checked): below 10^13 the only counterexamples are the five numbers above. -/
+def SearchComplete13 : Prop :=
+  ∀ m ∈ Counter, m < 10 ^ 13 → m = 1433987797 ∨ m = 45483661477 ∨ m = 85305551767 ∨
+    m = 367084269651 ∨ m = 1572650032347
 
 /-- OPEN QUESTION: are there infinitely many counterexamples?  (We do not claim this.) -/
 def InfinitelyMany : Prop := Counter.Infinite
@@ -127,8 +151,7 @@ theorem least_of_sieve (H : SieveComplete) : IsLeast Counter 1433987797 := by
   by_contra hlt
   rcases H m hm (by omega) with h | h | h <;> omega
 
-/-- If the sieve is right, the two new numbers are exactly the 2nd and 3rd counterexamples:
-below 10^11 the counterexample set is these three numbers. -/
+/-- If the sieve is right, below 10^11 the counterexample set is exactly these three numbers. -/
 theorem counter_below_of_sieve (H : SieveComplete) :
     {m | m ∈ Counter ∧ m < 10 ^ 11} = {1433987797, 45483661477, 85305551767} := by
   ext m
@@ -140,9 +163,19 @@ theorem counter_below_of_sieve (H : SieveComplete) :
     · exact ⟨mem_counter_45483661477, by norm_num⟩
     · exact ⟨mem_counter_85305551767, by norm_num⟩
 
-/-- If there are infinitely many counterexamples, there is one beyond our largest. -/
-theorem exists_larger_of_infinite (H : InfinitelyMany) : ∃ m ∈ Counter, 85305551767 < m :=
-  H.exists_gt 85305551767
+/-- The 10^13 claim implies the 10^11 claim. -/
+theorem sieve_of_search13 (H : SearchComplete13) : SieveComplete := by
+  intro m hm hlt
+  rcases H m hm (by omega) with h | h | h | h | h
+  · exact Or.inl h
+  · exact Or.inr (Or.inl h)
+  · exact Or.inr (Or.inr h)
+  · omega
+  · omega
+
+/-- If there are infinitely many counterexamples, there is one beyond the largest known. -/
+theorem exists_larger_of_infinite (H : InfinitelyMany) : ∃ m ∈ Counter, 1572650032347 < m :=
+  H.exists_gt 1572650032347
 
 /-! ### Small sanity facts (proved) -/
 
@@ -159,5 +192,6 @@ end SunA157225
 
 #print axioms SunA157225.not_rep_45483661477
 #print axioms SunA157225.not_rep_85305551767
+#print axioms SunA157225.not_rep_1572650032347
 #print axioms SunA157225.sunConjecture_false
 #print axioms SunA157225.least_of_sieve
