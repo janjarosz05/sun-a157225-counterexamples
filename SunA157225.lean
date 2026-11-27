@@ -21,12 +21,15 @@
   more, beyond Moshe's stated search bound of 10^13:
       m = 15429013109983  (n = 7714506554992),
       m = 16170736674691  (n = 8085368337346).
-  They are proved below as well.  We do not know of an earlier source for these two.
+      m = 35009488862317  (n = 17504744431159),
+      m = 96561420011947  (n = 48280710005974)   [search of 10^13 .. 10^14 still in progress].
+  They are proved below as well.  We do not know of an earlier source for these.
 
   What is PROVED here (Lean kernel, `decide +kernel`; no `sorry`, no `native_decide`,
   no extra axioms):  `not_rep_1433987797`, `not_rep_45483661477`, `not_rep_85305551767`,
   `not_rep_367084269651`, `not_rep_1572650032347`, `not_rep_15429013109983`,
-  `not_rep_16170736674691`, `sunConjecture_false`, and the small facts
+  `not_rep_16170736674691`, `not_rep_35009488862317`, `not_rep_96561420011947`,
+  `sunConjecture_false`, and the small facts
   in the last section.
 
   What is NOT proved here and is stated only as a named hypothesis (`Prop`):
@@ -94,7 +97,7 @@ theorem not_rep_of_check (m N : ℕ) (L : List ℕ) (hm : m < 2 ^ N)
     obtain ⟨⟨h1, h2⟩, h3⟩ := hd
     rcases (Nat.dvd_prime hp).mp (Nat.dvd_of_mod_eq_zero h3) with h | h <;> omega
 
-/-! ### The seven counterexamples (kernel-checked) -/
+/-! ### The nine counterexamples (kernel-checked) -/
 
 /-- Adamczewski's counterexample (Aug 2026), n = 716993899: 807 cells, 40 divisors. -/
 theorem not_rep_1433987797 : ¬ Rep 1433987797 :=
@@ -131,6 +134,18 @@ theorem not_rep_15429013109983 : ¬ Rep 15429013109983 :=
 1758 cells, 100 divisors. -/
 theorem not_rep_16170736674691 : ¬ Rep 16170736674691 :=
   not_rep_of_check 16170736674691 44 [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 79, 83, 89, 97, 103, 107, 113, 131, 137, 149, 163, 173, 191, 193, 197, 199, 211, 227, 263, 281, 293, 347, 367, 397, 431, 449, 541, 569, 571, 619, 641, 701, 719, 739, 881, 883, 1301, 1373, 1433, 1459, 1489, 1523, 1847, 1877, 2039, 3517, 4217, 4219, 4933, 4937, 5711, 6257, 6311, 8161, 9091, 9187, 9311, 9803, 10321, 10357, 15289, 18839, 21673, 22573, 24877, 26293, 28081, 29009, 32423, 51767, 75553, 78803, 114473, 130409, 131713, 138101, 139511, 197023, 496439, 772913, 1421969, 1518731, 1968569]
+    (by decide +kernel) (by decide +kernel)
+
+/-- n = 17504744431159 (found 27 Nov 2026 by the segmented sieve `seg2k.c`):
+1845 cells, 92 divisors. -/
+theorem not_rep_35009488862317 : ¬ Rep 35009488862317 :=
+  not_rep_of_check 35009488862317 45 [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 83, 89, 101, 103, 113, 131, 137, 151, 163, 211, 227, 233, 263, 269, 277, 283, 293, 311, 313, 397, 409, 439, 443, 487, 499, 509, 751, 827, 839, 1013, 1117, 1303, 1399, 1499, 1511, 2539, 2861, 3313, 3467, 3943, 4289, 5557, 7487, 8563, 10343, 10837, 12011, 15241, 16217, 16631, 17747, 18217, 26863, 34259, 43669, 46751, 48247, 54767, 77983, 80621, 84247, 157081, 160723, 199399, 230863, 261467, 514741, 667643, 1113703, 1520527, 1834141, 1850413, 2308001]
+    (by decide +kernel) (by decide +kernel)
+
+/-- n = 48280710005974 (found 27 Nov 2026 by the segmented sieve `seg2k.c`):
+1975 cells, 92 divisors. -/
+theorem not_rep_96561420011947 : ¬ Rep 96561420011947 :=
+  not_rep_of_check 96561420011947 47 [5, 7, 11, 13, 17, 19, 23, 29, 37, 43, 47, 53, 59, 61, 71, 83, 89, 107, 109, 113, 137, 139, 151, 167, 191, 193, 211, 223, 229, 239, 277, 293, 307, 331, 337, 421, 457, 523, 569, 571, 599, 647, 673, 773, 829, 853, 919, 971, 977, 1063, 1093, 1427, 1453, 1487, 1811, 1867, 1987, 2027, 2543, 3967, 4157, 4517, 4987, 5101, 5801, 7187, 7937, 13229, 16063, 21647, 27281, 37501, 38791, 125107, 192791, 250267, 374123, 444877, 492059, 602309, 960677, 961087, 1014593, 1810451, 1889191, 2219183, 2296487, 2498423, 2804377, 3652211, 5348669, 7646503]
     (by decide +kernel) (by decide +kernel)
 
 /-- Sun's conjecture for A157225 is false (each of the five numbers refutes it). -/
