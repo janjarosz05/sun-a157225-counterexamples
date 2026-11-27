@@ -25,9 +25,11 @@ This repository contains Lean 4 proofs that nine numbers are counterexamples:
 | **96 561 420 011 947** | 48 280 710 005 974 | this repository (27 Nov 2026) |
 
 The last four lie beyond Moshe's stated search bound of 10^13. They were found on 27 November 2026
-by the segmented sieve [`search/seg2k.c`](search/seg2k.c), which has so far covered
-10^13 ≤ m < 2.9·10^13 exhaustively; the rest of 10^13 .. 10^14 is being searched, so the list above
-10^13 may still have gaps. I know of no earlier source for them,
+by the segmented sieve [`search/seg2k.c`](search/seg2k.c), which covered 10^13 ≤ m < 10^14
+exhaustively (one run, split between two machines; every sieve survivor re-checked exactly with a
+deterministic 64-bit Miller-Rabin test). It found exactly these four and no others in that range.
+This completeness statement is a computation, not a proof: in the Lean file it is the named
+hypothesis `SearchWindow14`. I know of no earlier source for the four numbers,
 but I could not read pending OEIS drafts automatically, so treat "first found here" as provisional.
 The PDF note still describes the first five only.
 

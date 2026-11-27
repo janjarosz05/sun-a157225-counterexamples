@@ -174,6 +174,12 @@ def SearchComplete13 : Prop :=
   ∀ m ∈ Counter, m < 10 ^ 13 → m = 1433987797 ∨ m = 45483661477 ∨ m = 85305551767 ∨
     m = 367084269651 ∨ m = 1572650032347
 
+/-- COMPUTATIONAL CLAIM (segmented sieve `seg2k.c`, 27 Nov 2026, one run, survivors re-checked
+exactly; not kernel-checked): in 10^13 ≤ m < 10^14 the only counterexamples are these four. -/
+def SearchWindow14 : Prop :=
+  ∀ m ∈ Counter, 10 ^ 13 ≤ m → m < 10 ^ 14 → m = 15429013109983 ∨ m = 16170736674691 ∨
+    m = 35009488862317 ∨ m = 96561420011947
+
 /-- OPEN QUESTION: are there infinitely many counterexamples?  (We do not claim this.) -/
 def InfinitelyMany : Prop := Counter.Infinite
 
@@ -206,6 +212,16 @@ theorem sieve_of_search13 (H : SearchComplete13) : SieveComplete := by
   · exact Or.inr (Or.inr h)
   · omega
   · omega
+
+/-- If both searches are right, there are exactly nine counterexamples below 10^14. -/
+theorem counter_below_14_of_searches (H13 : SearchComplete13) (H14 : SearchWindow14)
+    (m : ℕ) (hm : m ∈ Counter) (hlt : m < 10 ^ 14) :
+    m = 1433987797 ∨ m = 45483661477 ∨ m = 85305551767 ∨ m = 367084269651 ∨
+    m = 1572650032347 ∨ m = 15429013109983 ∨ m = 16170736674691 ∨ m = 35009488862317 ∨
+    m = 96561420011947 := by
+  by_cases h : m < 10 ^ 13
+  · rcases H13 m hm h with h | h | h | h | h <;> simp [h]
+  · rcases H14 m hm (by omega) hlt with h | h | h | h <;> simp [h]
 
 /-- If there are infinitely many counterexamples, there is one beyond the largest known. -/
 theorem exists_larger_of_infinite (H : InfinitelyMany) : ∃ m ∈ Counter, 1572650032347 < m :=
