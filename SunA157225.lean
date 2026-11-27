@@ -17,9 +17,16 @@
   The first two were found independently by us a few hours later the same day (sieve up to 10^11);
   priority for all four is Moshe's.  This file contributes formal proofs of all five.
 
+  On 27 Nov 2026 our segmented sieve (`search/seg2k.c`), run on 10^13 <= m < 2.7*10^13, found two
+  more, beyond Moshe's stated search bound of 10^13:
+      m = 15429013109983  (n = 7714506554992),
+      m = 16170736674691  (n = 8085368337346).
+  They are proved below as well.  We do not know of an earlier source for these two.
+
   What is PROVED here (Lean kernel, `decide +kernel`; no `sorry`, no `native_decide`,
   no extra axioms):  `not_rep_1433987797`, `not_rep_45483661477`, `not_rep_85305551767`,
-  `not_rep_367084269651`, `not_rep_1572650032347`, `sunConjecture_false`, and the small facts
+  `not_rep_367084269651`, `not_rep_1572650032347`, `not_rep_15429013109983`,
+  `not_rep_16170736674691`, `sunConjecture_false`, and the small facts
   in the last section.
 
   What is NOT proved here and is stated only as a named hypothesis (`Prop`):
@@ -87,7 +94,7 @@ theorem not_rep_of_check (m N : ℕ) (L : List ℕ) (hm : m < 2 ^ N)
     obtain ⟨⟨h1, h2⟩, h3⟩ := hd
     rcases (Nat.dvd_prime hp).mp (Nat.dvd_of_mod_eq_zero h3) with h | h <;> omega
 
-/-! ### The five counterexamples (kernel-checked) -/
+/-! ### The seven counterexamples (kernel-checked) -/
 
 /-- Adamczewski's counterexample (Aug 2026), n = 716993899: 807 cells, 40 divisors. -/
 theorem not_rep_1433987797 : ¬ Rep 1433987797 :=
@@ -112,6 +119,18 @@ theorem not_rep_367084269651 : ¬ Rep 367084269651 :=
 /-- n = 786325016174 (Moshe 2026): 1478 cells, 83 divisors. -/
 theorem not_rep_1572650032347 : ¬ Rep 1572650032347 :=
   not_rep_of_check 1572650032347 41 [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 53, 59, 67, 71, 73, 79, 83, 89, 97, 103, 109, 113, 131, 139, 157, 163, 167, 173, 179, 191, 193, 197, 233, 239, 257, 331, 337, 347, 509, 877, 1009, 1049, 1051, 1087, 1109, 1231, 1327, 1439, 1481, 1721, 2389, 3623, 3709, 3767, 5531, 6317, 6491, 6637, 6983, 7907, 11981, 17299, 38557, 95063, 109937, 144439, 181061, 188933, 197539, 231317, 244553, 263521, 427997, 495713, 513673, 556811, 559259, 762659, 969457, 1159993, 1173917]
+    (by decide +kernel) (by decide +kernel)
+
+/-- n = 7714506554992 (found 27 Nov 2026 by the segmented sieve `seg2k.c`, range 10^13 .. 2.7*10^13):
+1754 cells, 69 divisors. -/
+theorem not_rep_15429013109983 : ¬ Rep 15429013109983 :=
+  not_rep_of_check 15429013109983 44 [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 43, 53, 59, 61, 67, 71, 83, 89, 107, 109, 113, 127, 131, 137, 139, 149, 157, 163, 173, 179, 181, 193, 197, 211, 241, 263, 307, 337, 379, 461, 673, 701, 797, 911, 1091, 2543, 2797, 2801, 2969, 3041, 6737, 8719, 9941, 10709, 16007, 17551, 62903, 107033, 402923, 539509, 645979, 679171, 700279, 1012789, 1063397, 1324261, 1362059, 1980101, 2322259]
+    (by decide +kernel) (by decide +kernel)
+
+/-- n = 8085368337346 (found 27 Nov 2026 by the segmented sieve `seg2k.c`, range 10^13 .. 2.7*10^13):
+1758 cells, 100 divisors. -/
+theorem not_rep_16170736674691 : ¬ Rep 16170736674691 :=
+  not_rep_of_check 16170736674691 44 [5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 79, 83, 89, 97, 103, 107, 113, 131, 137, 149, 163, 173, 191, 193, 197, 199, 211, 227, 263, 281, 293, 347, 367, 397, 431, 449, 541, 569, 571, 619, 641, 701, 719, 739, 881, 883, 1301, 1373, 1433, 1459, 1489, 1523, 1847, 1877, 2039, 3517, 4217, 4219, 4933, 4937, 5711, 6257, 6311, 8161, 9091, 9187, 9311, 9803, 10321, 10357, 15289, 18839, 21673, 22573, 24877, 26293, 28081, 29009, 32423, 51767, 75553, 78803, 114473, 130409, 131713, 138101, 139511, 197023, 496439, 772913, 1421969, 1518731, 1968569]
     (by decide +kernel) (by decide +kernel)
 
 /-- Sun's conjecture for A157225 is false (each of the five numbers refutes it). -/
@@ -193,5 +212,7 @@ end SunA157225
 #print axioms SunA157225.not_rep_45483661477
 #print axioms SunA157225.not_rep_85305551767
 #print axioms SunA157225.not_rep_1572650032347
+#print axioms SunA157225.not_rep_15429013109983
+#print axioms SunA157225.not_rep_16170736674691
 #print axioms SunA157225.sunConjecture_false
 #print axioms SunA157225.least_of_sieve

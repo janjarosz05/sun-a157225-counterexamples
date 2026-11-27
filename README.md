@@ -10,7 +10,7 @@ Zhi-Wei Sun conjectured in 2009 that every odd `m > 20` other than 25, 31 and 19
 representation. The conjecture was disproved in August 2026 by one counterexample,
 `m = 1433987797` (T. Adamczewski, [arXiv:2608.11941](https://arxiv.org/abs/2608.11941)).
 
-This repository contains Lean 4 proofs that five numbers are counterexamples:
+This repository contains Lean 4 proofs that seven numbers are counterexamples:
 
 | m | n = (m+1)/2 | found by |
 |---|---|---|
@@ -19,6 +19,14 @@ This repository contains Lean 4 proofs that five numbers are counterexamples:
 | 85 305 551 767 | 42 652 775 884 | Yotam Moshe (26 Nov 2026); independently here |
 | 367 084 269 651 | 183 542 134 826 | Yotam Moshe (26 Nov 2026) |
 | 1 572 650 032 347 | 786 325 016 174 | Yotam Moshe (26 Nov 2026) |
+| **15 429 013 109 983** | 7 714 506 554 992 | this repository (27 Nov 2026) |
+| **16 170 736 674 691** | 8 085 368 337 346 | this repository (27 Nov 2026) |
+
+The last two lie beyond Moshe's stated search bound of 10^13. They were found on 27 November 2026
+by the segmented sieve [`search/seg2k.c`](search/seg2k.c), which has so far covered
+10^13 ≤ m < 2.7·10^13 exhaustively (search in progress). I know of no earlier source for them,
+but I could not read pending OEIS drafts automatically, so treat "first found here" as provisional.
+The PDF note still describes the first five only.
 
 ## Priority (correction, 27 November 2026)
 
@@ -30,7 +38,7 @@ Priority for all four belongs to Moshe. What this repository adds is the formal 
 
 ## What is proved and what is not
 
-- **Proved (Lean 4 kernel):** none of the five numbers has a representation, hence the conjecture
+- **Proved (Lean 4 kernel):** none of the seven numbers has a representation, hence the conjecture
   is false. No `sorry`, no `native_decide`; axioms used: `propext`, `Quot.sound`.
 - **Computed, not proved:** my exhaustive bit-sieve finds no other counterexample below 10^11
   (hypothesis `SieveComplete` in the Lean file). Moshe reports none other below 10^13
@@ -46,7 +54,8 @@ Priority for all four belongs to Moshe. What this repository adds is the formal 
 - [`certificates/`](certificates): one CSV per number with a line `x,y,r,d` for every cell
   `(x, y)` that survives the mod 6 filter; `d` is the least prime factor of
   `r = m - 2^x - 7*2^y`.
-- [`search/sieve2k.c`](search/sieve2k.c): the sieve. [`search/verify.py`](search/verify.py): an
+- [`search/sieve2k.c`](search/sieve2k.c): the sieve below 10^11. [`search/seg2k.c`](search/seg2k.c): segmented sieve for larger ranges
+  (`./seg2k A B`; every survivor of the bit-sieve is re-checked exactly with a deterministic Miller-Rabin test). [`search/verify.py`](search/verify.py): an
   independent check with SymPy.
 - [`paper/`](paper): LaTeX source of the note.
 
@@ -57,7 +66,7 @@ Lean (the first build downloads the Mathlib cache; the file itself takes a few m
     lake exe cache get
     lake build
 
-Python (checks every cell of the five numbers, then all odd m < 200000):
+Python (checks every cell of the seven numbers, then all odd m < 200000):
 
     pip install sympy
     python3 search/verify.py
