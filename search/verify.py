@@ -20,7 +20,7 @@ def analyse(m):
     return cs,rows,reps
 if __name__=="__main__":
     res={}
-    for m in [1433987797,45483661477,85305551767,367084269651,1572650032347,15429013109983,16170736674691]:
+    for m in [1433987797,45483661477,85305551767,367084269651,1572650032347,15429013109983,16170736674691,35009488862317,96561420011947]:
         cs,rows,reps=analyse(m)
         nm=sum(1 for r in rows if r[3]=='mod6'); nd=[r for r in rows if r[3]=='div']
         divs=sorted(set(r[4] for r in nd))
