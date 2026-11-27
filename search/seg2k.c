@@ -46,10 +46,10 @@ int main(int argc,char**argv){
   for(u64 a=2;a<=TMAX;a<<=1) for(u64 b=2*K;a+b<=TMAX;b<<=1){ u64 t=a+b; for(int ci=0;ci<3;ci++){ int c=2*ci+1; if(t%6==(u64)((c+6-5)%6)) T[ci][nT[ci]++]=(t-c+5)/6; } }
   fprintf(stderr,"K=%llu primes=%llu terms %d %d %d\n",(unsigned long long)K,(unsigned long long)np,nT[0],nT[1],nT[2]);
   A-=A%6;
-  for(u64 a0=A;a0<B;a0+=G){
-    u64 a1=a0+G<B?a0+G:B; a1+= (6-a1%6)%6;
-    u64 k0=(a0-TMAX)/6-1, k1=a1/6+1, NK=k1-k0, NW=(NK+63)/64+2;
-    u64*P=aligned_alloc(64,NW*8); memset(P,0xff,NW*8);
+  for(u64 a0=A,a1;a0<B;a0=a1){          // chunks [a0,a1) with a0, a1 multiples of 6: no overlap, no gap
+    a1=a0+G<B?a0+G:B; a1+= (6-a1%6)%6;
+    u64 k0=(a0-TMAX)/6-1, k1=a1/6+1, NK=k1-k0, NW=(NK+63)/64+2; NW=(NW+7)&~7ULL;   // size a multiple of the alignment
+    u64*P=aligned_alloc(64,NW*8); if(!P){ fprintf(stderr,"out of memory\n"); return 1; } memset(P,0xff,NW*8);
     const u64 SEG=1ULL<<21;
     #pragma omp parallel for schedule(dynamic,4)
     for(u64 s0=0;s0<NK;s0+=SEG){
