@@ -31,7 +31,7 @@ deterministic 64-bit Miller-Rabin test). It found exactly these four and no othe
 This completeness statement is a computation, not a proof: in the Lean file it is the named
 hypothesis `SearchWindow14`. I know of no earlier source for the four numbers,
 but I could not read pending OEIS drafts automatically, so treat "first found here" as provisional.
-The PDF note still describes the first five only.
+The PDF note covers all nine, with full certificates and a heuristic count.
 
 ## Priority (correction, 27 November 2026)
 
@@ -56,7 +56,7 @@ Priority for all four belongs to Moshe. What this repository adds is the formal 
 ## Files
 
 - [`Sun_A157225_counterexamples.pdf`](Sun_A157225_counterexamples.pdf): the note
-  (statement, proof, method, full certificates in the appendix).
+  (statement, proof, method, a heuristic count, full certificates for all nine numbers in the appendix).
 - [`SunA157225.lean`](SunA157225.lean): the formal proof (Lean 4.35.0 + Mathlib).
 - [`certificates/`](certificates): one CSV per number with a line `x,y,r,d` for every cell
   `(x, y)` that survives the mod 6 filter; `d` is the least prime factor of

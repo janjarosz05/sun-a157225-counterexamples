@@ -10,16 +10,18 @@
 \newcommand{\Rep}{\mathrm{Rep}}
 \title{Kernel-checked counterexamples to a conjecture of Zhi-Wei Sun\\ on $p+2^x+7\cdot 2^y$ (OEIS A157225)}
 \author{Jan Jarosz}
-\date{26 November 2026; revised 27 November 2026}
+\date{26 November 2026; revised 27 November 2026 (second revision: nine counterexamples)}
 \begin{document}\sloppy\maketitle
 \begin{abstract}
 Sun conjectured in 2009 that every odd integer $m>20$ other than $25$, $31$ and $1983$ can be written as
 $m=p+2^x+7\cdot 2^y$ with $p$ a prime congruent to $5$ modulo $6$ and $x,y\ge 1$. The conjecture was disproved in
 August 2026 by a single counterexample, $m=1\,433\,987\,797$. On 26 November 2026 Y.~Moshe reported four more on
 the OEIS, from a search below $10^{13}$. We found the first two of these independently a few hours later the same
-day; priority is Moshe's. Our contribution is a formal one: all five counterexamples are proved in Lean~4 with
-Mathlib, by certificates that the kernel checks. Statements about the absence of further counterexamples are
-computations, not formal proofs, and are labelled as such throughout.
+day; priority for those four is Moshe's. On 27 November 2026 an exhaustive search of $10^{13}\le m<10^{14}$ gave
+exactly four further counterexamples, which to our knowledge are new. Our main contribution is a formal one: all
+nine counterexamples are proved in Lean~4 with Mathlib, by certificates that the kernel checks. Statements about
+the absence of further counterexamples are computations, not formal proofs, and the question whether there are
+infinitely many is left open; both are labelled as such throughout.
 \end{abstract}
 
 \section{Statement}
@@ -42,6 +44,10 @@ odd $2n-1<10^{13}$ and checked with PARI/GP and SymPy. Our sieve up to $10^{11}$
 knowledge of that draft (pending edits are not shown on the published page), found the first two of them.
 The discovery of all four is therefore due to Moshe; ours is an independent rediscovery of two.
 
+\medskip\noindent\textbf{Beyond $10^{13}$.} On 27 November 2026 we searched all odd $m$ with $10^{13}\le m<10^{14}$
+(Section~\ref{sec:method}) and found exactly four more counterexamples. We know of no earlier source for them.
+Pending OEIS edits cannot be read automatically, so this novelty statement is provisional.
+
 \section{Results}
 \begin{theorem}[proved; Lean kernel]\label{thm:main}
 $\Rep(m)$ fails for
@@ -51,30 +57,39 @@ $1\,433\,987\,797$ & $716\,993\,899$ & Adamczewski \cite{epoch}\\
 $45\,483\,661\,477$ & $22\,741\,830\,739$ & Moshe \cite{moshe}; independently here\\
 $85\,305\,551\,767$ & $42\,652\,775\,884$ & Moshe \cite{moshe}; independently here\\
 $367\,084\,269\,651$ & $183\,542\,134\,826$ & Moshe \cite{moshe}\\
-$1\,572\,650\,032\,347$ & $786\,325\,016\,174$ & Moshe \cite{moshe}\\\bottomrule\end{tabular}\end{center}
+$1\,572\,650\,032\,347$ & $786\,325\,016\,174$ & Moshe \cite{moshe}\\
+$15\,429\,013\,109\,983$ & $7\,714\,506\,554\,992$ & this note (27 Nov 2026)\\
+$16\,170\,736\,674\,691$ & $8\,085\,368\,337\,346$ & this note (27 Nov 2026)\\
+$35\,009\,488\,862\,317$ & $17\,504\,744\,431\,159$ & this note (27 Nov 2026)\\
+$96\,561\,420\,011\,947$ & $48\,280\,710\,005\,974$ & this note (27 Nov 2026)\\\bottomrule\end{tabular}\end{center}
 \end{theorem}
 \begin{corollary}[proved]\label{cor}Sun's conjecture for A157225 is false. (Known from \cite{epoch}; each of the
-five numbers gives an independent proof.)\end{corollary}
+nine numbers gives an independent proof.)\end{corollary}
 
 \begin{observation}[our sieve; not formally verified]\label{obs}
 Among odd $m$ with $1983<m<10^{11}$, the first three numbers of Theorem~\ref{thm:main} are the only ones for which
 $\Rep(m)$ fails. In particular $1\,433\,987\,797$ is the least counterexample.
 \end{observation}
 \begin{observation}[reported by Moshe \cite{moshe}; not re-run by us]\label{obs13}
-Among odd $m$ with $1983<m<10^{13}$, the five numbers of Theorem~\ref{thm:main} are the only ones for which
+Among odd $m$ with $1983<m<10^{13}$, the first five numbers of Theorem~\ref{thm:main} are the only ones for which
 $\Rep(m)$ fails.
+\end{observation}
+\begin{observation}[our segmented sieve; one run; not formally verified]\label{obs14}
+Among odd $m$ with $10^{13}\le m<10^{14}$, the last four numbers of Theorem~\ref{thm:main} are the only ones for
+which $\Rep(m)$ fails. Together with Observation~\ref{obs13}: there are exactly nine counterexamples below $10^{14}$.
 \end{observation}
 
 \noindent\textbf{What is and is not claimed.}
 \begin{itemize}[leftmargin=1.4em,itemsep=1pt]
-\item \emph{Theorems:} the five numbers in Theorem~\ref{thm:main} are counterexamples. As far as we know these
+\item \emph{Theorems:} the nine numbers in Theorem~\ref{thm:main} are counterexamples. As far as we know these
 are the first formal (kernel-checked) proofs of them.
 \item \emph{Computed, not proved:} completeness below $10^{11}$ (Observation~\ref{obs}), which rests on our sieve
 program and hardware; it was run twice with identical output and reproduces Sun's list of small exceptions.
 Completeness below $10^{13}$ (Observation~\ref{obs13}) is Moshe's computation and we only quote it; it agrees
-with ours below $10^{11}$.
-\item \emph{Priority:} not claimed for any counterexample.
-\item \emph{Not claimed:} that there are infinitely many counterexamples (Question~\ref{q}), or anything about the
+with ours below $10^{11}$. Completeness in $[10^{13},10^{14})$ (Observation~\ref{obs14}) rests on a single run of
+our segmented sieve on two machines; it has not been repeated or independently confirmed.
+\item \emph{Priority:} not claimed for the first five counterexamples. The last four are, to our knowledge, first reported here (provisional, see above).
+\item \emph{Not claimed:} that there are infinitely many counterexamples (Question~\ref{q}; Section~\ref{sec:heur} gives only a heuristic), or anything about the
 sister conjectures A157237 and A157218, which we checked up to $10^{11}$ without finding a counterexample.
 \end{itemize}
 
@@ -92,7 +107,7 @@ $2^x\equiv 2$ or $4\pmod 6$ according as $x$ is odd or even, and $7\cdot2^y\equi
 $2^x+7\cdot 2^y\equiv m-5\equiv 2\pmod 6$, and among $2+2$, $2+4$, $4+4$ only $4+4\equiv 2$.
 For $m\equiv 3$ we need the sum $\equiv 4$, and only $2+2\equiv 4$.
 \end{proof}
-The first three numbers are $\equiv1\pmod 6$ and the last two are $\equiv 3\pmod 6$, so in every case about three
+The numbers $367\,084\,269\,651$ and $1\,572\,650\,032\,347$ are $\equiv 3\pmod 6$ and the other seven are $\equiv1\pmod 6$, so in every case about three
 quarters of the cells die at once. The remaining cells are killed by explicit divisors:
 \begin{center}\begin{tabular}{rrrrrr}\toprule
 $m$ & cells & $r\not\equiv5\ (6)$ & composite $r$ & distinct divisors used & largest\\\midrule
@@ -100,25 +115,32 @@ $1\,433\,987\,797$ & 807 & 613 & 194 & 40 & 13\,313\\
 $45\,483\,661\,477$ & 1117 & 846 & 271 & 60 & 163\,883\\
 $85\,305\,551\,767$ & 1185 & 898 & 287 & 66 & 292\,057\\
 $367\,084\,269\,651$ & 1327 & 986 & 341 & 73 & 407\,437\\
-$1\,572\,650\,032\,347$ & 1478 & 1098 & 380 & 83 & 1\,173\,917\\\bottomrule\end{tabular}\end{center}
+$1\,572\,650\,032\,347$ & 1478 & 1098 & 380 & 83 & 1\,173\,917\\
+$15\,429\,013\,109\,983$ & 1754 & 1334 & 420 & 69 & 2\,322\,259\\
+$16\,170\,736\,674\,691$ & 1758 & 1338 & 420 & 100 & 1\,968\,569\\
+$35\,009\,488\,862\,317$ & 1845 & 1385 & 460 & 92 & 2\,308\,001\\
+$96\,561\,420\,011\,947$ & 1975 & 1493 & 482 & 92 & 7\,646\,503\\\bottomrule\end{tabular}\end{center}
 The divisor of every surviving cell is listed in the Appendix, so the theorem can be checked by
-$194+271+287+341+380$ divisions. \qed
+$194+271+287+341+380+420+420+460+482=3255$ divisions. \qed
 
 \paragraph{Formal proof.} The file \texttt{SunA157225.lean} (Lean 4.35.0, Mathlib) defines
 $\Rep$ with Mathlib's \texttt{Nat.Prime}, a Boolean function \texttt{check m N L} that tests all cells with $x,y<N$
 against a divisor list $L$, and proves the soundness lemma
 \[\texttt{not\_rep\_of\_check}:\quad m<2^N\ \wedge\ \texttt{check m N L}=\texttt{true}\ \Longrightarrow\ \neg\,\Rep(m).\]
-The five theorems \texttt{not\_rep\_}$m$ apply it with $N=31,36,37,39,41$; the evaluation of \texttt{check} is done by the Lean kernel (\texttt{decide +kernel}).
+The nine theorems \texttt{not\_rep\_}$m$ apply it with $N=31,36,37,39,41,44,44,45,47$; the evaluation of \texttt{check} is done by the Lean kernel (\texttt{decide +kernel}).
 There is no \texttt{sorry} and no \texttt{native\_decide}; the axioms used are only \texttt{propext} and
 \texttt{Quot.sound}. Corollary~\ref{cor} is \texttt{sunConjecture\_false}. The whole file compiles in a few minutes at most.
 
-Observations~\ref{obs} and \ref{obs13} appear in the file only as named hypotheses
-(\texttt{SieveComplete}, \texttt{SearchComplete13} : \texttt{Prop}). Conditional theorems use them as explicit
+Observations~\ref{obs}, \ref{obs13} and \ref{obs14} appear in the file only as named hypotheses
+(\texttt{SieveComplete}, \texttt{SearchComplete13}, \texttt{SearchWindow14} : \texttt{Prop}). Conditional theorems use them as explicit
 assumptions: \texttt{least\_of\_sieve} (then $1\,433\,987\,797$ is the least counterexample),
 \texttt{counter\_below\_of\_sieve} (then the counterexamples below $10^{11}$ are exactly the first three numbers)
-and \texttt{sieve\_of\_search13} (the $10^{13}$ claim implies the $10^{11}$ claim).
+\texttt{sieve\_of\_search13} (the $10^{13}$ claim implies the $10^{11}$ claim) and
+\texttt{counter\_below\_14\_of\_searches} (under \texttt{SearchComplete13} and \texttt{SearchWindow14} every
+counterexample below $10^{14}$ is one of the nine). The open Question~\ref{q} is the proposition
+\texttt{InfinitelyMany}, which is not assumed anywhere except in one trivial conditional statement.
 
-\section{Method}
+\section{Method}\label{sec:method}
 \paragraph{Our search (below $10^{11}$).} A bit-sieve. For each residue $R\in\{1,5\}$ a bitmap stores which $6k+R<B$ are prime.
 For a fixed class $m\equiv c\pmod 6$, each term $t=2^x+7\cdot 2^y$ with $t\equiv c-5 \pmod 6$ turns the question
 ``is $m-t$ prime?'' into a shift of the bitmap by $(t-c+5)/6$ positions. OR-ing the shifted bitmaps over all $t$
@@ -126,7 +148,17 @@ gives, 64 values of $m$ per machine word, the set of representable $m$; zero bit
 $B=10^{11}$ this takes about 75 seconds on 4 cores and 2\,GB of memory (\texttt{sieve2k.c}). The complete output
 for odd $m<10^{11}$ is
 \[1,3,5,\dots,19,\ 25,\ 31,\ 1983,\ 1\,433\,987\,797,\ 45\,483\,661\,477,\ 85\,305\,551\,767 .\]
-\paragraph{Independent check.} Each of the five numbers was re-examined by a separate Python script (SymPy
+\paragraph{Our search in $[10^{13},10^{14})$.} A segmented version (\texttt{seg2k.c}). For a segment $[a_0,a_0+G)$
+with $G=10^{11}$ a bitmap of the primes $6k+5$ in $[a_0-2^{34},a_0+G)$ is built, and the shift-and-OR step is done
+only with the terms $t\le 2^{34}$. The few hundred $m$ per segment left unrepresented by these small terms
+(``survivors'') are then tested exactly: every term $t<m$ is tried, with a deterministic Miller--Rabin test valid
+for 64-bit integers. The range was cut into 90 jobs of length $10^{12}$; 51 ran on a 4-core cloud machine and 39
+on a desktop PC (about 6 to 10 minutes per job), and every job reported completion of all its segments. The program
+was first checked on windows containing the four numbers of Moshe, which it reproduces. The complete output for
+$10^{13}\le m<10^{14}$ is
+\[15\,429\,013\,109\,983,\quad 16\,170\,736\,674\,691,\quad 35\,009\,488\,862\,317,\quad 96\,561\,420\,011\,947 .\]
+This is one run and has not been repeated (Observation~\ref{obs14}).
+\paragraph{Independent check.} Each of the nine numbers was re-examined by a separate Python script (SymPy
 primality and factoring, no shared code with the sieve): every cell was enumerated and its $r$ shown to be
 $\not\equiv 5\pmod 6$ or composite. The same script recovers exactly Sun's exceptions for $m<2\cdot10^{5}$.
 \paragraph{How the candidates were ranked.} The search was guided by a ``clock'' picture: a small prime $q$ with
@@ -136,23 +168,46 @@ surviving cells each, and $13$ and $17$ another $15$ to $26$. This explains why 
 a heuristic: we found no full covering system, so it proves nothing about
 further counterexamples.
 
+\section{A heuristic count (not a proof)}\label{sec:heur}
+Before the search above $10^{13}$ we made the clock picture quantitative. Fix the residues of $m$ modulo the
+primes $q\le 100$. A cell is \emph{alive} if $r\equiv 5\pmod 6$ and no such $q$ divides $r$; an alive cell is
+given the probability $(3/\ln r)\prod_{5\le q\le 100}q/(q-1)$ of being prime, and cells are treated as independent.
+The probability that a random odd $m$ of a given size has no representation is then the average over residue
+classes of $\prod_{\mathrm{alive}}(1-P)$, which we estimated by annealed importance sampling. The resulting expected
+number of counterexamples in $[2^L,2^{L+1})$ is about $0.03$ for $L=24$, $0.08$ for $L=30$, $0.2$ for $L=40$,
+$0.4$ for $L=44$, $0.9$ for $L=50$ and $3$ for $L=60$, growing roughly like $2^{0.17L}$.
+
+Without any fitted parameter this gave about $0.8$ expected counterexamples for $2^{11}\le m<2^{30}$ (there are
+none), about $2.2$ for $2^{30}\le m<2^{44}$ (there are seven, five of them known when the model was built), and, as a forecast made before the search, between
+$2$ and $4$ in $[10^{13},10^{14})$ (there are four). The four new numbers lie in residue classes modulo
+$510510=2\cdot3\cdot5\cdot7\cdot11\cdot13\cdot17$ that the model ranks very high: $15\,429\,013\,109\,983$ is in the
+single best of the $255\,255$ odd classes, the other three within the best $0.3\%$.
+
+The model therefore suggests, heuristically, that the counterexamples are infinite in number and that their
+counting function grows like a small power of $X$, perhaps near $X^{0.17}$. This is not a theorem. The model
+underestimates the observed count below $2^{44}$ by a factor of about three, the independence assumption is unproved, and we have
+no covering system that would force $\Rep(m)$ to fail on a whole residue class.
+
 \begin{question}\label{q}
 Are there infinitely many odd $m$ for which $\Rep(m)$ fails? The number of cells surviving the parity filter grows
-like $(\log_2 m)^2/4$ while the chance that a given $r$ is prime decays only like $1/\log m$, so
-counterexamples should become rarer; without a covering congruence argument (as in Crocker \cite{crocker} for
-$p+2^x+2^y$) we see no way to decide this. By Observation~\ref{obs13} the next counterexample, if any, exceeds $10^{13}$.
+like $(\log_2 m)^2/4$ while the chance that a given $r$ is prime decays only like $1/\log m$, so a typical $m$ has
+more and more representations; the counterexamples come from rare residue classes in which the small clocks kill
+most cells. Section~\ref{sec:heur} suggests that these classes are frequent enough for infinitely many
+counterexamples, but without a covering congruence argument (as in Crocker \cite{crocker} for $p+2^x+2^y$) we see
+no way to decide this. By Observations~\ref{obs13} and \ref{obs14} the next counterexample, if any, exceeds $10^{14}$.
 \end{question}
 
 \section{Files}
 \begin{itemize}[leftmargin=1.4em,itemsep=1pt]
-\item \texttt{SunA157225.lean}: definitions, checker, the five theorems, hypotheses and conditional theorems.
-\item \texttt{certificate\_}$m$\texttt{.csv} for the five $m$: one line $(x,y,r,d)$ per surviving cell, $d$ the least prime factor of $r$.
-\item \texttt{verify.py}: the independent check. \texttt{sieve2k.c}: the sieve
-(\texttt{./sieve2k 5 100000000000 7}).
+\item \texttt{SunA157225.lean}: definitions, checker, the nine theorems, hypotheses and conditional theorems.
+\item \texttt{certificate\_}$m$\texttt{.csv} for the nine $m$: one line $(x,y,r,d)$ per surviving cell, $d$ the least prime factor of $r$.
+\item \texttt{verify.py}: the independent check. \texttt{sieve2k.c}: the sieve below $10^{11}$
+(\texttt{./sieve2k 5 100000000000 7}). \texttt{seg2k.c}: the segmented sieve (\texttt{./seg2k A B}).
+\item Repository: \url{https://github.com/janjarosz05/sun-a157225-counterexamples}.
 \end{itemize}
 
 \begin{thebibliography}{9}
-\bibitem{oeis} OEIS Foundation, sequence A157225, \url{https://oeis.org/A157225} (consulted 26 November 2026).
+\bibitem{oeis} OEIS Foundation, sequence A157225, \url{https://oeis.org/A157225} (consulted 26 and 27 November 2026).
 \bibitem{sun} Z.-W. Sun, \emph{Mixed sums of primes and other terms}, arXiv:0901.3075 (2009).
 \bibitem{epoch} T. Adamczewski, \emph{OEIS Open: How many conjectures can language models turn into theorems?}, arXiv:2608.11941 (2026).
 \bibitem{moshe} Y. Moshe, proposed edit \#15 of OEIS A157225 with discussion, 26 November 2026,
@@ -177,6 +232,18 @@ Divisors used: \input{divs_367084269651.tex}.
 \subsection*{$m=1\,572\,650\,032\,347$ \quad (380 cells; $x\le 39$, $y\le 37$, both odd)}
 Divisors used: \input{divs_1572650032347.tex}.
 \begin{longtable}{@{}llllll@{}}\input{tab_1572650032347.tex}\end{longtable}
+\subsection*{$m=15\,429\,013\,109\,983$ \quad (420 cells; $x\le 42$, $y\le 40$, both even)}
+Divisors used: \input{divs_15429013109983.tex}.
+\begin{longtable}{@{}llllll@{}}\input{tab_15429013109983.tex}\end{longtable}
+\subsection*{$m=16\,170\,736\,674\,691$ \quad (420 cells; $x\le 42$, $y\le 40$, both even)}
+Divisors used: \input{divs_16170736674691.tex}.
+\begin{longtable}{@{}llllll@{}}\input{tab_16170736674691.tex}\end{longtable}
+\subsection*{$m=35\,009\,488\,862\,317$ \quad (460 cells; $x\le 44$, $y\le 42$, both even)}
+Divisors used: \input{divs_35009488862317.tex}.
+\begin{longtable}{@{}llllll@{}}\input{tab_35009488862317.tex}\end{longtable}
+\subsection*{$m=96\,561\,420\,011\,947$ \quad (482 cells; $x\le 46$, $y\le 42$, both even)}
+Divisors used: \input{divs_96561420011947.tex}.
+\begin{longtable}{@{}llllll@{}}\input{tab_96561420011947.tex}\end{longtable}
 \subsection*{$m=1\,433\,987\,797$ \quad (194 cells)}
 Divisors used: \input{divs_1433987797.tex}.
 \begin{longtable}{@{}llllll@{}}\input{tab_1433987797.tex}\end{longtable}
